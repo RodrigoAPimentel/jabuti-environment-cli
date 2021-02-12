@@ -1,0 +1,75 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+require 'getoptlong'
+
+opts = GetoptLong.new(
+	  [ '--machine-name', GetoptLong::OPTIONAL_ARGUMENT ],
+	  [ '--external-ip', GetoptLong::OPTIONAL_ARGUMENT ],
+	  [ '--cpu', GetoptLong::OPTIONAL_ARGUMENT ],
+    [ '--memory', GetoptLong::OPTIONAL_ARGUMENT ],
+    [ '--progrs', GetoptLong::OPTIONAL_ARGUMENT ],
+    [ '--ports', GetoptLong::OPTIONAL_ARGUMENT ],
+    [ '--vm-tool', GetoptLong::OPTIONAL_ARGUMENT ],
+    [ '--vars', GetoptLong::OPTIONAL_ARGUMENT ],
+)
+
+opts.ordering=(GetoptLong::REQUIRE_ORDER)   ### this line.
+
+opts.each do |opt, arg|
+  case opt
+    when '--machine-name'
+      MACHINE_NAME = arg
+    when '--external-ip'
+      MACHINE_PUBLIC_IP = arg
+    when '--cpu'
+      MACHINE_NUMBER_OF_CORES = arg
+    when '--memory'
+      MACHINE_MEMORY_SIZE = arg
+    when '--progrs'
+      MACHINE_PROGRAMS = arg.split(',')
+    when '--ports'
+      MACHINE_PORTS = arg.split(',')
+    when '--vm-tool'
+      MACHINE_TOOL = arg
+    when '--vars'
+      MACHINE_VARS = arg.split(',')
+  end
+end
+
+Vagrant.configure("2") do |config|
+
+	config.vm.define MACHINE_NAME do |machine|
+    machine.vm.box = "centos/7"
+		machine.vm.hostname = "vm-#{MACHINE_NAME}".downcase
+		machine.vm.box_check_update = false
+		machine.ssh.forward_agent= true
+		machine.vm.network "private_network", ip: MACHINE_PUBLIC_IP
+    machine.vm.network "forwarded_port", id: "ssh", host_ip: "127.0.0.1", guest: 22, host: "22#{MACHINE_PUBLIC_IP.split(".")[3]}"
+
+    MACHINE_PORTS.each { |port| machine.vm.network "forwarded_port", id: port.split('(')[0], host_ip: "127.0.0.1", guest: port.split('(')[1].split(':')[1], host: port.split('(')[1].split(':')[0] }
+			
+    machine.vm.synced_folder ".", "/vagrant", disabled: true
+
+		machine.vm.provider "virtualbox" do |vb|
+			vb.name = MACHINE_NAME
+			vb.cpus = MACHINE_NUMBER_OF_CORES
+			vb.memory = MACHINE_MEMORY_SIZE
+			vb.customize ["modifyvm", :id, "--audio", "none"]
+			vb.customize ["modifyvm", :id, "--description", "IP: #{MACHINE_PUBLIC_IP}   <==>   SSH Port: 22#{MACHINE_PUBLIC_IP.split(".")[3]}\nUser: #{MACHINE_VARS[0]}   <==>   Password: #{MACHINE_VARS[1]}\nUser: root   <==>   Password: #{MACHINE_VARS[1]}\nHas the public SSH key been copied? #{MACHINE_VARS[2]}\nPrograms: #{MACHINE_PROGRAMS}\nPorts: #{MACHINE_PORTS}"]
+		end
+  end
+  
+  config.vm.provision "shell", path: "../files/basicProvision.sh", args: MACHINE_VARS
+
+  if MACHINE_VARS[2] == 'Yes'
+    config.vm.provision "shell", path: "../files/copySSHPubKey.sh", args: MACHINE_VARS
+  end 
+
+  MACHINE_PROGRAMS.each { |prog| config.vm.provision "shell", path: "../files/programs/#{prog}.sh" }
+
+  if MACHINE_TOOL != ''
+    config.vm.provision "shell", path: "../files/vmTools/#{MACHINE_TOOL}.sh", args: MACHINE_VARS
+  end 
+
+  config.vm.provision "shell", inline: "sudo reboot"
+end

@@ -1,0 +1,25 @@
+{
+  "name": "jabuti-environment-cli",
+  "description_name": "Jabuti Environment CLI",
+  "version": "1.0.0",
+  "description": "CLI para criação de Ambiente de Desenvolvimento",
+  "main": "index.js",
+  "author": "Rodrigo Pimentel",
+  "license": "MIT",
+  "bin": {
+    "jec": "index.js"
+  },
+  "preferGlobal": true,
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "clear": "^0.1.0",
+    "clui": "^0.3.6",
+    "configstore": "^5.0.1",
+    "figlet": "^1.5.0",
+    "inquirer": "^7.3.3",
+    "lodash": "^4.17.20",
+    "minimist": "^1.2.5",
+    "shelljs": "^0.8.4",
+    "touch": "^3.1.0"
+  }
+}
