@@ -13,7 +13,7 @@ opts = GetoptLong.new(
     [ '--vars', GetoptLong::OPTIONAL_ARGUMENT ],
 )
 
-opts.ordering=(GetoptLong::REQUIRE_ORDER)   ### this line.
+opts.ordering=(GetoptLong::REQUIRE_ORDER)
 
 opts.each do |opt, arg|
   case opt

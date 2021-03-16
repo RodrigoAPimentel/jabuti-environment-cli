@@ -1,8 +1,8 @@
 {
   "name": "jabuti-environment-cli",
   "description_name": "Jabuti Environment CLI",
-  "version": "1.0.0",
-  "description": "CLI para criação de Ambiente de Desenvolvimento",
+  "version": "1.0.1",
+  "description": "Application for creating environments and DevOps Tools quickly and efficiently.",
   "main": "index.js",
   "author": "Rodrigo Pimentel",
   "license": "MIT",
@@ -21,5 +21,13 @@
     "minimist": "^1.2.5",
     "shelljs": "^0.8.4",
     "touch": "^3.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.22.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "prettier": "^2.2.1"
   }
 }
