@@ -37,7 +37,7 @@ module.exports = {
             {
                 type: 'input',
                 name: 'machine_memory_size',
-                message: 'Enter the MEMORY SIZE for the Virtual Machine (Mb):',
+                message: 'Enter the MEMORY RAM SIZE for the Virtual Machine (Mb):',
                 default: '4096',
             },
             {
@@ -61,20 +61,20 @@ module.exports = {
             {
                 type: 'list',
                 name: 'terminal',
-                message: 'Do you want to change the terminal from Bash to Oh-My-ZSH on the Virtual Machine?aa',
+                message: 'Do you want to change the terminal from Bash to Oh-My-ZSH on the Virtual Machine?',
                 choices: ['Yes', 'No'],
             },
             {
                 type: 'checkbox',
                 name: 'programs',
-                message: 'Select the programs to be installed',
+                message: 'Select the programs to be installed:',
                 choices: programs,
                 pageSize: 20,
             },
             {
                 type: 'checkbox',
                 name: 'ports',
-                message: 'Select the ports that became available',
+                message: 'Select the ports that became available:',
                 choices: ports,
                 pageSize: 20,
             },
