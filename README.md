@@ -4,21 +4,32 @@ Aplicação para criação de ambiente de forma rapida e eficiente. Em poucos cl
 _______________
 ## **Requisitos**
 
-- _Node >= v12_
+- _Node >= v14.11.0_
 - _Vagrant >= v2.2.7_
 - _Virtual Box >= v6.0_
 ______________
 ## **Instalação**
 
+### **Rápida**
+
+- No Powershell executar o comando npm: 
+```
+npm install -g jabuti-environment-cli
+```
+> #### **_P.S: Todos as informações são para Windows._**
+
+### **Com Repositório**
+
 - _Clonar o repositorio do JEC para sua maquina_
 - _Criar a Variavel de Ambiente JEC_HOME apontando para a pasta aonde esta o JEC_
-- _Rodar o comando ***"npm link"*** dentro da pasta do JEC_
-
+- _Executar o comando "npm link" dentro da pasta do JEC_
 > #### **_P.S: Todos as informações são para Windows._**
 __________________________
 ## **Uso**
 
-_No terminal de sua preferencia (Powershell, prompt e etc) usar o comando ***"jec"***._
+_No Powershell em modo administrador usar o comando ***"jec"***._
+
+> #### **_P.S: Liberar a execução de script's no Powershell da seguinte forma: executar o Powershell como administrador e rodar o comando "set-executionpolicy unrestricted"_**
 
 ![](/assets/logo.png)
 

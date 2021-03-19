@@ -32,5 +32,11 @@ module.exports = {
         'array-callback-return': 'off',
         'no-eval': 'off',
         'no-unused-expressions': 'off',
+        'prefer-destructuring': 'off',
+        'no-case-declarations': 'off',
+        'no-plusplus': 'off',
+        'no-bitwise': 'off',
+        'no-new': 'off',
+        'global-require': 'off',
     },
 };

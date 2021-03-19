@@ -1,44 +1,43 @@
 #!/usr/bin/env node
-const clear = require('clear');
+const shell = require('shelljs');
+const chalk = require('chalk');
 
-const { logo } = require('./src/modules/logo');
+const packagejs = require('./package.json');
 
-const modes_questions = require('./src/questions/modes');
-
-const { createVirtualMachine } = require('./src/modules/createVirtualMachine');
-const { createVirtualMachineTools } = require('./src/modules/createVirtualMachineTools');
-
-class Jec {
+class Index {
     constructor() {
-        clear();
-        logo();
-        this.modes();
+        console.log('jjjjjjjjjjjjjj');
+        this.init();
     }
 
-    async modes() {
-        const responses = await modes_questions.ask();
+    async init() {
+        await this.checkEnvironmentVariableExists();
+        const Jec = require('./src/jec');
+        new Jec();
+    }
 
-        switch (responses.mode) {
-            case 'Create Virtual Machine':
-                await createVirtualMachine();
-                break;
+    async checkEnvironmentVariableExists() {
+        return new Promise((resolve) => {
+            if (!shell.env.JEC_HOME7) {
+                console.log(chalk.yellow(`\n   Creating JEC_HOME7 environment variable .....\n`));
 
-            case 'Create Virtual Machine with TOOL':
-                await createVirtualMachineTools();
-                break;
-
-            // case "Create Standard Environment":
-            //   console.log(chalk.red("Not Implemented 1"));
-            //   break;
-
-            // case "Create Development Environment from Profile":
-            //   console.log(chalk.red("Not Implemented 2"));
-            //   break;
-            default:
-                console.log('Not Implemented !!');
-                break;
-        }
+                if (shell.env.NVM_HOME) {
+                    return resolve(
+                        shell.exec(
+                            `setx JEC_HOME7 "${shell.env.NVM_HOME}\\${shell.exec('node --version', {
+                                silent: true,
+                                async: true,
+                            })}\\node_modules\\${packagejs.name}" /M`
+                        )
+                        // shell.exec(
+                        //     `setx JEC_HOME7 "algumacoisa\\v123.456\\node_modules\\asdf\\vnjgfhj\\rhfghfghf\\zsdcsdfsd\\45645645\\2342\\sdfsfs" /M`
+                        // )
+                    );
+                }
+            }
+            return resolve();
+        });
     }
 }
 
-module.exports = new Jec();
+module.exports = new Index();

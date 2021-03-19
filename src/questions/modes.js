@@ -6,6 +6,7 @@ const modes = [
     'Create Virtual Machine with TOOL',
     // "Create Standard Development Environment",
     // "Create Development Environment from Profile",
+    'Exit',
 ];
 
 module.exports = {
