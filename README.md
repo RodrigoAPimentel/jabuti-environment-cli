@@ -35,7 +35,6 @@ set-executionpolicy unrestricted
 ```
 2. _Iniciar a aplicação com o comando ***"jec"***._
 
-
 ![](/assets/logo.png)
 
 ### **Mode of Operation:**
