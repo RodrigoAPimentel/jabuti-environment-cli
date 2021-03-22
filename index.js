@@ -1,43 +1,52 @@
 #!/usr/bin/env node
 const shell = require('shelljs');
-const chalk = require('chalk');
+const clear = require('clear');
 
-const packagejs = require('./package.json');
+const modes_questions = require('./src/questions/modes');
+const { homeScreen } = require('./src/modules/homeScreen');
 
-class Index {
+const { createVirtualMachine } = require('./src/modules/createVirtualMachine');
+const { createVirtualMachineTools } = require('./src/modules/createVirtualMachineTools');
+
+class Jec {
     constructor() {
-        console.log('jjjjjjjjjjjjjj');
         this.init();
     }
 
     async init() {
-        await this.checkEnvironmentVariableExists();
-        const Jec = require('./src/jec');
-        new Jec();
+        clear();
+        const status = await homeScreen();
+        status && this.modes();
     }
 
-    async checkEnvironmentVariableExists() {
-        return new Promise((resolve) => {
-            if (!shell.env.JEC_HOME7) {
-                console.log(chalk.yellow(`\n   Creating JEC_HOME7 environment variable .....\n`));
+    async modes() {
+        const responses = await modes_questions.ask();
 
-                if (shell.env.NVM_HOME) {
-                    return resolve(
-                        shell.exec(
-                            `setx JEC_HOME7 "${shell.env.NVM_HOME}\\${shell.exec('node --version', {
-                                silent: true,
-                                async: true,
-                            })}\\node_modules\\${packagejs.name}" /M`
-                        )
-                        // shell.exec(
-                        //     `setx JEC_HOME7 "algumacoisa\\v123.456\\node_modules\\asdf\\vnjgfhj\\rhfghfghf\\zsdcsdfsd\\45645645\\2342\\sdfsfs" /M`
-                        // )
-                    );
-                }
-            }
-            return resolve();
-        });
+        switch (responses.mode) {
+            case 'Create Virtual Machine':
+                await createVirtualMachine();
+                break;
+
+            case 'Create Virtual Machine with TOOL':
+                await createVirtualMachineTools();
+                break;
+
+            // case 'Create Standard Development Environment':
+            //     console.log(chalk.bold.red('    Not Implemented !!'));
+            //     break;
+
+            // case 'Create Development Environment from Profile':
+            //     console.log(chalk.bold.red('    Not Implemented !!'));
+            //     break;
+
+            case 'Exit':
+                shell.exit(1);
+                break;
+
+            default:
+                break;
+        }
     }
 }
 
-module.exports = new Index();
+module.exports = new Jec();

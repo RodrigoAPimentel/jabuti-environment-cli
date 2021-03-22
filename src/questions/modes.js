@@ -4,9 +4,10 @@ const chalk = require('chalk');
 const modes = [
     'Create Virtual Machine',
     'Create Virtual Machine with TOOL',
-    // "Create Standard Development Environment",
+    // 'Create Standard Development Environment',
     // "Create Development Environment from Profile",
-    'Exit',
+    // chalk.bold.gray(new inquirer.Separator()),
+    chalk.bold.italic.red('Exit'),
 ];
 
 module.exports = {

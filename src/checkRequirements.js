@@ -44,7 +44,7 @@ function checkVagrant() {
             `Vagrant installed in a lower version than recommended. Upgrade to v${vagrantVersionRequired} or higher at https://www.vagrantup.com/downloads`,
         ];
     }
-    return [false, 'Vagrant not installed. Download at https://www.vagrantup.com/downloads', false];
+    return [false, 'Vagrant NOT INSTALLED. Download at https://www.vagrantup.com/downloads', false];
 }
 
 function checkVirtualBox() {
@@ -61,7 +61,7 @@ function checkVirtualBox() {
             `VirtualBox installed in a lower version than recommended. Upgrade to v${virtualBoxVersionRequired} or higher at https://www.virtualbox.org/wiki/Downloads`,
         ];
     }
-    return [false, 'VirtualBox not installed. Download at https://www.virtualbox.org/wiki/Downloads', false];
+    return [false, 'VirtualBox NOT INSTALLED. Download at https://www.virtualbox.org/wiki/Downloads', false];
 }
 
 module.exports = {

@@ -38,5 +38,6 @@ module.exports = {
         'no-bitwise': 'off',
         'no-new': 'off',
         'global-require': 'off',
+        'no-nested-ternary': 'off',
     },
 };

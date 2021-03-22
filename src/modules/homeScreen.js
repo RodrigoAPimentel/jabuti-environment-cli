@@ -1,5 +1,6 @@
 const chalk = require('chalk');
 const clear = require('clear');
+const shell = require('shelljs');
 
 const { JEC_PATH } = require('../relativePath');
 
@@ -32,37 +33,47 @@ ${chalk.green(' ╚════╝ ╚═╝  ╚═╝╚═════╝  �
 function requirementsMessages(initialRequirements) {
     const [nodeRequirements, vagrantRequirements, virtualBoxRequirements] = initialRequirements;
 
-    console.log(chalk.green(`INFO! Using ${infoCLI.description_name} version installed globally`));
+    console.log(
+        `${
+            shell.env.JEC_HOME
+                ? chalk.bold.green(`INFO!! Using ${infoCLI.description_name} version through NPM LINK`)
+                : chalk.bold.green(`INFO!! Using ${infoCLI.description_name} version installed GLOBALLY`)
+        }`
+    );
     console.log(
         `${
             nodeRequirements[0]
-                ? chalk.green(`INFO! ${nodeRequirements[1]}`)
-                : chalk.yellow(`⚠️WARNING⚠️ ${nodeRequirements[1]}`)
+                ? chalk.bold.green(`INFO!! ${nodeRequirements[1]}`)
+                : chalk.bold.yellow(`WARNING!! ${nodeRequirements[1]}`)
         }`
     );
     console.log(
         `${
             vagrantRequirements[0]
-                ? chalk.green(`INFO! ${vagrantRequirements[1]}`)
-                : chalk.yellow(`⚠️WARNING⚠️ ${vagrantRequirements[1]}`)
+                ? chalk.bold.green(`INFO!! ${vagrantRequirements[1]}`)
+                : vagrantRequirements[2] === false
+                ? chalk.bold.red(`PROBLEM!! ${vagrantRequirements[1]}`)
+                : chalk.bold.yellow(`WARNING!! ${vagrantRequirements[1]}`)
         }`
     );
     console.log(
         `${
             virtualBoxRequirements[0]
-                ? chalk.green(`INFO! ${virtualBoxRequirements[1]}`)
-                : chalk.yellow(`⚠️WARNING⚠️ ${virtualBoxRequirements[1]}`)
+                ? chalk.bold.green(`INFO!! ${virtualBoxRequirements[1]}`)
+                : virtualBoxRequirements[2] === false
+                ? chalk.bold.red(`PROBLEM!! ${virtualBoxRequirements[1]}`)
+                : chalk.bold.yellow(`WARNING!! ${virtualBoxRequirements[1]}`)
         }`
     );
 }
 
 module.exports = {
     async homeScreen() {
-        console.log(chalk.green(`Starting ${infoCLI.description_name}, please wait ....`));
+        console.log(chalk.bold.green(`Starting ${infoCLI.description_name}, please wait ....`));
 
         const initialRequirements = await checkRequirements(infoCLI);
 
-        // clear();
+        clear();
 
         requirementsMessages(initialRequirements);
 
@@ -79,38 +90,41 @@ module.exports = {
             )
         );
 
+        initialRequirements[3][0] &&
+            console.log(
+                `${
+                    chalk.bold.yellow(
+                        '_____________________________________________________________________________________________________________________________________________________________________\n\n'
+                    ) +
+                    chalk.bold.yellow(`   ${infoCLI.description_name} update available: `) +
+                    chalk.bold.green.bold(`${initialRequirements[3][1].replace('\n', '')} `) +
+                    chalk.bold.gray(`(curent: ${infoCLI.version})\n\n`) +
+                    chalk.bold.yellow(
+                        `   Run ${chalk.bold.italic.green(`npm install -g ${infoCLI.name}`)} to update.\n`
+                    ) +
+                    chalk.bold.yellow(
+                        '_____________________________________________________________________________________________________________________________________________________________________\n'
+                    )
+                }`
+            );
+
         if (!initialRequirements[4]) {
             console.log(
                 `${
                     chalk.red(
                         '_____________________________________________________________________________________________________________________________________________________________________\n\n'
                     ) +
-                    chalk.red(
-                        `   Basic requirement not installed. Please install for the ${infoCLI.description_name} to work!!\n`
+                    chalk.bold.red(
+                        `   Basic requirement NOT INSTALLED. Please install for the ${infoCLI.description_name} to work!!\n`
                     ) +
                     chalk.red(
-                        '_____________________________________________________________________________________________________________________________________________________________________\n\n'
+                        '_____________________________________________________________________________________________________________________________________________________________________\n'
                     )
                 }`
             );
 
             return false;
         }
-        initialRequirements[3][0] &&
-            console.log(
-                `${
-                    chalk.yellow(
-                        '_____________________________________________________________________________________________________________________________________________________________________\n\n'
-                    ) +
-                    chalk.yellow(`   ⚠️${infoCLI.description_name} update available: `) +
-                    chalk.green.bold(`${initialRequirements[3][1].replace('\n', '')} `) +
-                    chalk.gray(`(curent: ${infoCLI.version})⚠️\n\n`) +
-                    chalk.yellow(`   Run ${chalk.magenta(`npm install -g ${infoCLI.name}`)} to update.\n`) +
-                    chalk.yellow(
-                        '_____________________________________________________________________________________________________________________________________________________________________\n\n'
-                    )
-                }`
-            );
 
         console.log(
             chalk.green(
