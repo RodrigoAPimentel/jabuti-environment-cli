@@ -1,7 +1,7 @@
 {
   "name": "jabuti-environment-cli",
   "description_name": "Jabuti Environment CLI",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Application for creating environments and DevOps Tools quickly and efficiently.",
   "main": "index.js",
   "author": "Rodrigo Pimentel",
