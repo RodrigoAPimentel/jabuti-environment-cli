@@ -1,18 +1,22 @@
 #!/usr/bin/env node
+const shell = require('shelljs');
 const clear = require('clear');
 
-const { logo } = require('./src/modules/logo');
-
 const modes_questions = require('./src/questions/modes');
+const { homeScreen } = require('./src/modules/homeScreen');
 
 const { createVirtualMachine } = require('./src/modules/createVirtualMachine');
 const { createVirtualMachineTools } = require('./src/modules/createVirtualMachineTools');
 
 class Jec {
     constructor() {
+        this.init();
+    }
+
+    async init() {
         clear();
-        logo();
-        this.modes();
+        const status = await homeScreen();
+        status && this.modes();
     }
 
     async modes() {
@@ -27,15 +31,19 @@ class Jec {
                 await createVirtualMachineTools();
                 break;
 
-            // case "Create Standard Environment":
-            //   console.log(chalk.red("Not Implemented 1"));
-            //   break;
+            // case 'Create Standard Development Environment':
+            //     console.log(chalk.bold.red('    Not Implemented !!'));
+            //     break;
 
-            // case "Create Development Environment from Profile":
-            //   console.log(chalk.red("Not Implemented 2"));
-            //   break;
+            // case 'Create Development Environment from Profile':
+            //     console.log(chalk.bold.red('    Not Implemented !!'));
+            //     break;
+
+            case 'Exit':
+                shell.exit(1);
+                break;
+
             default:
-                console.log('Not Implemented !!');
                 break;
         }
     }
