@@ -1,18 +1,37 @@
 const inquirer = require('inquirer');
 const fs = require('fs').promises;
 
-const { JEC_PATH } = require('../relativePath');
+const ports = require(`${pathJec}/src/creationModules/virtualMachineSettings/ports`);
 
-const ports = require(`${JEC_PATH}/src/files/ports`);
+const modes = ['Standard Virtual Machine', 'Customize the Virtual Machine'];
 
 async function listProgramsInDirectory() {
-    const listFiles = await fs.readdir(`${JEC_PATH}/src/files/programs`);
+    const listFiles = await fs.readdir(`${pathJec}/src/files/programs`);
 
     return listFiles.map((file) => file.split('.')[0]).filter((file) => file !== 'ZSH');
 }
 
 module.exports = {
     async ask() {
+        const questions = [
+            {
+                type: 'list',
+                name: 'vmType',
+                message: 'Select the type of Virtual Machine',
+                choices: modes,
+                pageSize: 20,
+                validate(value) {
+                    if (value.length) {
+                        return true;
+                    }
+                    return 'Choose a type';
+                },
+            },
+        ];
+        return inquirer.prompt(questions);
+    },
+
+    async askCreateVirtualMachine() {
         const programs = await listProgramsInDirectory();
 
         const questions = [
@@ -77,6 +96,24 @@ module.exports = {
                 message: 'Select the ports that became available:',
                 choices: ports,
                 pageSize: 20,
+            },
+        ];
+        return inquirer.prompt(questions);
+    },
+
+    async askCreateVirtualMachineStandard() {
+        const questions = [
+            {
+                type: 'input',
+                name: 'machine_name_standard',
+                message: 'Enter the NAME of the Virtual Machine:',
+                default: 'Virtual-Machine-Standard-1',
+            },
+            {
+                type: 'input',
+                name: 'public_ip_standard',
+                message: 'Enter the PUBLIC IP of the Virtual Machine:',
+                default: '192.168.100.223',
             },
         ];
         return inquirer.prompt(questions);

@@ -1,11 +1,8 @@
 const chalk = require('chalk');
 const clear = require('clear');
-const shell = require('shelljs');
 
-const { JEC_PATH } = require('../relativePath');
-
-const infoCLI = require(`${JEC_PATH}/package.json`);
-const { checkRequirements } = require('../checkRequirements');
+const pkg = require(`${pathJec}/package.json`);
+const { checkRequirements } = require(`${pathJec}/src/utils/checkRequirements`);
 
 function logo() {
     console.log(`
@@ -33,13 +30,8 @@ ${chalk.green(' ╚════╝ ╚═╝  ╚═╝╚═════╝  �
 function requirementsMessages(initialRequirements) {
     const [nodeRequirements, vagrantRequirements, virtualBoxRequirements] = initialRequirements;
 
-    console.log(
-        `${
-            shell.env.JEC_HOME
-                ? chalk.bold.green(`INFO!! Using ${infoCLI.description_name} version through NPM LINK`)
-                : chalk.bold.green(`INFO!! Using ${infoCLI.description_name} version installed GLOBALLY`)
-        }`
-    );
+    console.log(chalk.bold.green(`INFO!! Using ${pkg.description_name} in Wizard Mode`));
+
     console.log(
         `${
             nodeRequirements[0]
@@ -69,9 +61,9 @@ function requirementsMessages(initialRequirements) {
 
 module.exports = {
     async homeScreen() {
-        console.log(chalk.bold.green(`Starting ${infoCLI.description_name}, please wait ....`));
+        console.log(chalk.bold.green(`Starting ${pkg.description_name}, please wait ....`));
 
-        const initialRequirements = await checkRequirements(infoCLI);
+        const initialRequirements = await checkRequirements(pkg);
 
         clear();
 
@@ -79,8 +71,8 @@ module.exports = {
 
         logo();
 
-        console.log(`Welcome to ${infoCLI.description_name} ${chalk.yellow(`v${infoCLI.version}`)}`);
-        console.log(`${chalk.green(infoCLI.description)}\n`);
+        console.log(`Welcome to ${pkg.description_name} ${chalk.yellow(`v${pkg.version}`)}`);
+        console.log(`${chalk.green(pkg.description)}\n`);
 
         console.log(
             chalk.white(
@@ -96,12 +88,10 @@ module.exports = {
                     chalk.bold.yellow(
                         '_____________________________________________________________________________________________________________________________________________________________________\n\n'
                     ) +
-                    chalk.bold.yellow(`   ${infoCLI.description_name} update available: `) +
+                    chalk.bold.yellow(`   ${pkg.description_name} update available: `) +
                     chalk.bold.green.bold(`${initialRequirements[3][1].replace('\n', '')} `) +
-                    chalk.bold.gray(`(curent: ${infoCLI.version})\n\n`) +
-                    chalk.bold.yellow(
-                        `   Run ${chalk.bold.italic.green(`npm install -g ${infoCLI.name}`)} to update.\n`
-                    ) +
+                    chalk.bold.gray(`(curent: ${pkg.version})\n\n`) +
+                    chalk.bold.yellow(`   Run ${chalk.bold.italic.green(`npm install -g ${pkg.name}`)} to update.\n`) +
                     chalk.bold.yellow(
                         '_____________________________________________________________________________________________________________________________________________________________________\n'
                     )
@@ -115,7 +105,7 @@ module.exports = {
                         '_____________________________________________________________________________________________________________________________________________________________________\n\n'
                     ) +
                     chalk.bold.red(
-                        `   Basic requirement NOT INSTALLED. Please install for the ${infoCLI.description_name} to work!!\n`
+                        `   Basic requirement NOT INSTALLED. Please install for the ${pkg.description_name} to work!!\n`
                     ) +
                     chalk.red(
                         '_____________________________________________________________________________________________________________________________________________________________________\n'
