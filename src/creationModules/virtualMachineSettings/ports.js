@@ -7,7 +7,6 @@ const PORTS = [
     'Jenkins(8080:8080)',
     'Nexus(8081:8081)',
     'SonarQube(9000:9000)',
-    // "OpenShift-console(8443:8443)",
 ];
 
 module.exports = PORTS;

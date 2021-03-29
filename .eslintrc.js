@@ -39,5 +39,6 @@ module.exports = {
         'no-new': 'off',
         'global-require': 'off',
         'no-nested-ternary': 'off',
+        'no-undef': 'off',
     },
 };

@@ -59,16 +59,16 @@ Vagrant.configure("2") do |config|
 		end
   end
   
-  config.vm.provision "shell", path: "../files/basicProvision.sh", args: MACHINE_VARS
+  config.vm.provision "shell", path: "../provisioning/basicProvision.sh", args: MACHINE_VARS
 
   if MACHINE_VARS[2] == 'Yes'
-    config.vm.provision "shell", path: "../files/copySSHPubKey.sh", args: MACHINE_VARS
+    config.vm.provision "shell", path: "../provisioning/copySSHPubKey.sh", args: MACHINE_VARS
   end 
 
-  MACHINE_PROGRAMS.each { |prog| config.vm.provision "shell", path: "../files/programs/#{prog}.sh" }
+  MACHINE_PROGRAMS.each { |prog| config.vm.provision "shell", path: "../programs/#{prog}.sh" }
 
   if MACHINE_TOOL != ''
-    config.vm.provision "shell", path: "../files/vmTools/#{MACHINE_TOOL}.sh", args: MACHINE_VARS
+    config.vm.provision "shell", path: "../vmTools/#{MACHINE_TOOL}.sh", args: MACHINE_VARS
   end 
 
   config.vm.provision "shell", inline: "sudo reboot"

@@ -15,7 +15,7 @@ module.exports = {
         const questions = [
             {
                 type: 'list',
-                name: 'mode',
+                name: 'creationMode',
                 message: chalk.bold.italic('Select the Mode of Operation:'),
                 choices: modes,
                 validate(value) {

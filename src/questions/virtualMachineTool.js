@@ -1,10 +1,8 @@
 const inquirer = require('inquirer');
 const fs = require('fs').promises;
 
-const { JEC_PATH } = require('../relativePath');
-
 async function listVMToolInDirectory() {
-    const listVMTools = await fs.readdir(`${JEC_PATH}/src/files/vmTools`);
+    const listVMTools = await fs.readdir(`${pathJec}/src/files/vmTools`);
 
     return listVMTools.map((file) => file.split('.')[0]);
 }
@@ -17,7 +15,7 @@ module.exports = {
             {
                 type: 'list',
                 name: 'vmTool',
-                message: 'Select the programs to be installed',
+                message: 'Select the Tool to be installed',
                 choices: vmTools,
                 pageSize: 20,
                 validate(value) {
