@@ -20,10 +20,12 @@ Aplicação para criação de ambiente de forma rápida e eficiente. Em poucos c
     -   [Rápida](#Rápida)
     -   [Clonando Repositório](#Clonando-Repositório)
 -   [Uso](#Uso)
-    -   [Mode of Operation](#Mode-of-Operation)
-        -   [Create Virtual Machine](#Create-Virtual-Machine)
-        -   [Create Virtual Machine with TOOL](#Create-Virtual-Machine-with-TOOL)
-    -   [Informações Finais do Provisionamento](#Informações-Finais-do-Provisionamento)
+    -   [CLI (Command-Line Interface)](#CLI-Command-Line-Interface)
+    -   [Wizard](#Wizard)
+        -   [Mode of Operation](#Mode-of-Operation)
+            -   [Create Virtual Machine](#Create-Virtual-Machine)
+            -   [Create Virtual Machine with TOOL](#Create-Virtual-Machine-with-TOOL)
+        -   [Informações Finais do Provisionamento](#Informações-Finais-do-Provisionamento)
 -   [Problemas e Alertas](#Problemas-e-Alertas)
     -   [Requisitos básicos não instalados](#Requisitos-básicos-não-instalados)
     -   [Requisitos básicos com versões inferiores a recomendadas](#Requisitos-básicos-com-versões-inferiores-a-recomendadas)
@@ -64,7 +66,7 @@ npm install -g jabuti-environment-cli
 
 ## **Uso**
 
-> #### **_P.S: Instrução para utilização do JEC no Powershell. Recomendamos a utilização do mesmo._**
+> #### **_P.S: Instrução para utilização do JEC no Powershell (Recomendado)._**
 
 1. _Utilizar em modo **administrador**;_
 1. _Ativar a execução de script's externos:_
@@ -73,7 +75,37 @@ npm install -g jabuti-environment-cli
 set-executionpolicy unrestricted
 ```
 
-2. _Iniciar a aplicação com o comando ***"jec"***._
+## **CLI (Command-Line Interface)**
+
+![](/assets/cli.png)
+
+Ser cada vez mais ágil e preciso é um dos principais objetivos dos profissionais de TI. Para qualquer duvida temos o **_-h, --help_** no Powershell. Abaixo alguns comandos (pode ser usado com **_jec_** ou **_jabuti_**):
+
+-   **jec wizard:** _Inicia o JEC no modo wizard de utilização (conforme abaixo);_
+-   **jec -V, jec --version:** _Versão do JEC;_
+-   **jec -h, jec --help:** _Help para os comandos;_
+-   **jec vm [options] <machine_name> <public_ip>:** _Cria uma Máquina Virtual com configurações definidas com os **options** abaixo:_
+    -   **machine_name:** _Informe o nome da Máquina Virtual que será exposto na Virtual Box e também será o hostname._
+    -   **public_ip:** _Informe o IP fixo da Máquina Virtual._
+    -   **options:** _Opções de Configuração da Máquina Virtual._
+        -   **-p, --number-cores \<number>:** _Quantidade de Cores de CPU reservados para Máquina Virtual;_
+        -   **-m, --memory-size \<megabytes>:** _Quantidade de Memória RAM reservada para a Máquina Virtual;_
+        -   **-u, --user \<user>:** _Usuário do Sistema Operacional da Máquina Virtual;_
+        -   **-s, --password \<password>:** _Senha do Usuário do Sistema Operacional da Máquina Virtual;_
+        -   **-k, --ssh-key:** _Copia para a Máquina Virtual a chave SSH da pasta "/\<user\>/.ssh";_
+        -   **-t, --terminal:** _Instala e configura o Terminal Oh-My-ZSH na Máquina Virtual._
+-   **jec tool [options] <public_ip> \<user> \<password>:** _Cria uma Máquina Virtual com Ferramenta de DevOps:_
+    -   **public_ip:** _Informe o IP fixo da Máquina Virtual._
+    -   **user:** _Usuário da Ferramenta;_
+    -   **password:** _Senha da Ferramenta;_
+    -   **options:** _Opções de Ferramentas:_
+        -   **-d, --devops-tool \<tool>:** _Ferramenta:_
+            -   **ansible-awx:** _Cria uma Máquina Virtual com o Ansible-AWX instalado e configurado, pronto para usar;_
+            -   **minishift:** _Cria uma um Cluster Minishift no Sistema Operacional do Host._
+
+## **Wizard**
+
+_Iniciar a aplicação com o comando ***"jec wizard"*** ou ***"jabuti wizard"***._
 
 ![](/assets/logo.png)
 
@@ -81,36 +113,55 @@ set-executionpolicy unrestricted
 
 #### **_Create Virtual Machine_**
 
-Cria uma Máquina Virtual com configurações definidas no Wizard.
+-   Cria uma Máquina Virtual com as seguintes configurações padrão:
 
-![](/assets/CreateVirtualMachine.png)
+    -   **_Cores de Processamento:_** 2;
+    -   **_Memória RAM:_** 2Gb;
+    -   **_Programas Básicos:_** Docker, Git, NodeJS;
+    -   **_Portas abertas:_** Nenhuma;
+    -   **_Usuário:_** root;
+    -   **_Senha:_** toor;
+    -   **_Cópia da chave SSH:_** Não.
 
--   **Enter the NAME of the Virtual Machine:**
-    -   _**Default:** Virtual-Machine-1;_
-    -   _Informe o nome da Máquina Virtual que será exposto na Virtual Box e também será o hostname._
--   **Enter the PUBLIC IP of the Virtual Machine:**
-    -   _**Default:** 192.168.100.123;_
-    -   _Informe o IP fixo da Máquina Virtual._
--   **Enter the NUMBER OF CORES for the Virtual Machine:**
-    -   _**Default:** 2;_
-    -   _Informe a Quantidade de Cores de CPU reservados para Máquina Virtual._
--   **Enter the MEMORY RAM SIZE for the Virtual Machine (Mb):**
-    -   _**Default:** 4096Mb (4Gb);_
-    -   _Informe a Quantidade de Memória RAM reservada para a Máquina Virtual._
--   **Enter USER for Virtual Machine:**
-    -   _**Default:** root;_
-    -   _Informe o Usuário do Sistema Operacional da Máquina Virtual._
--   **Enter the PASSWORD for Virtual Machine [Default = toor]:**
-    -   _**Default:** toor;_
-    -   _Informe a Senha do Usuário do Sistema Operacional da Máquina Virtual._
--   **Do you want to copy the public SSH key to the Virtual Machine?**
-    -   _**"Yes" ou "No"**_
-    -   _Copia para a Máquina Virtual a chave SSH da pasta "/\<user\>/.ssh"._
--   **Do you want to change the terminal from Bash to Oh-My-ZSH on the Virtual Machine?**
-    -   _**"Yes" ou "No"**_
-    -   _Instala e configura o Terminal Oh-My-ZSH na Máquina Virtual._
--   **Select the programs to be installed:** _Selecione os programas a serem instalados no provisionamento da Máquina Virtual._
--   **Select the ports that became available:** _Selecione as portas a serem liberadas no provisionamento da Máquina Virtual._
+    ![](/assets/CreateVirtualMachineStandard.png)
+
+    -   **Enter the NAME of the Virtual Machine:**
+        -   _**Default:** Virtual-Machine-Standard-1;_
+        -   _Informe o nome da Máquina Virtual que será exposto na Virtual Box e também será o hostname._
+    -   **Enter the PUBLIC IP of the Virtual Machine:**
+        -   _**Default:** 192.168.100.223;_
+        -   _Informe o IP fixo da Máquina Virtual._
+
+-   Cria uma Máquina Virtual com configurações definidas no Wizard.
+
+    ![](/assets/CreateVirtualMachine.png)
+
+    -   **Enter the NAME of the Virtual Machine:**
+        -   _**Default:** Virtual-Machine-1;_
+        -   _Informe o nome da Máquina Virtual que será exposto na Virtual Box e também será o hostname._
+    -   **Enter the PUBLIC IP of the Virtual Machine:**
+        -   _**Default:** 192.168.100.123;_
+        -   _Informe o IP fixo da Máquina Virtual._
+    -   **Enter the NUMBER OF CORES for the Virtual Machine:**
+        -   _**Default:** 2;_
+        -   _Informe a Quantidade de Cores de CPU reservados para Máquina Virtual._
+    -   **Enter the MEMORY RAM SIZE for the Virtual Machine (Mb):**
+        -   _**Default:** 4096Mb (4Gb);_
+        -   _Informe a Quantidade de Memória RAM reservada para a Máquina Virtual._
+    -   **Enter USER for Virtual Machine:**
+        -   _**Default:** root;_
+        -   _Informe o Usuário do Sistema Operacional da Máquina Virtual._
+    -   **Enter the PASSWORD for Virtual Machine [Default = toor]:**
+        -   _**Default:** toor;_
+        -   _Informe a Senha do Usuário do Sistema Operacional da Máquina Virtual._
+    -   **Do you want to copy the public SSH key to the Virtual Machine?**
+        -   _**"Yes" ou "No"**_
+        -   _Copia para a Máquina Virtual a chave SSH da pasta "/\<user\>/.ssh"._
+    -   **Do you want to change the terminal from Bash to Oh-My-ZSH on the Virtual Machine?**
+        -   _**"Yes" ou "No"**_
+        -   _Instala e configura o Terminal Oh-My-ZSH na Máquina Virtual._
+    -   **Select the programs to be installed:** _Selecione os programas a serem instalados no provisionamento da Máquina Virtual._
+    -   **Select the ports that became available:** _Selecione as portas a serem liberadas no provisionamento da Máquina Virtual._
 
 #### **_Create Virtual Machine with TOOL_**
 
@@ -118,7 +169,7 @@ Cria uma Máquina Virtual com Ferramenta de DevOps.
 
 ![](/assets/CreateVirtualMachineTool.png)
 
--   **Ansible-AWX:** _Cria uma Maquina Virtual com o Ansible-AWX instalado e configurado, pronto para usar._
+-   **Ansible-AWX:** _Cria uma Máquina Virtual com o Ansible-AWX instalado e configurado, pronto para usar._
 -   **Minishift-Windows:** _Cria uma um Cluster Minishift no Sistema Operacional do Host._
 
 ---
