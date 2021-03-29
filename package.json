@@ -49,6 +49,6 @@
     "url": "https://github.com/RodrigoAPimentel/jabuti-environment-cli"
   },
   "engines": {
-    "node": ">=14.11.0"
+    "node": ">=14.12.0"
   }
 }
