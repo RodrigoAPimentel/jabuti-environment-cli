@@ -2,72 +2,18 @@ const chalk = require('chalk');
 const clear = require('clear');
 
 const pkg = require(`${pathJec}/package.json`);
-const { checkRequirements } = require(`${pathJec}/src/utils/checkRequirements`);
-
-function logo() {
-    console.log(`
-${chalk.green('     ██╗ █████╗ ██████╗ ██╗   ██╗████████╗██╗    ')}${chalk.yellow(
-        '███████╗███╗   ██╗██╗   ██╗██╗██████╗  ██████╗ ███╗   ██╗███╗   ███╗███████╗███╗   ██╗████████╗     ██████╗██╗     ██╗'
-    )}
-${chalk.green('     ██║██╔══██╗██╔══██╗██║   ██║╚══██╔══╝██║    ')}${chalk.yellow(
-        '██╔════╝████╗  ██║██║   ██║██║██╔══██╗██╔═══██╗████╗  ██║████╗ ████║██╔════╝████╗  ██║╚══██╔══╝    ██╔════╝██║     ██║'
-    )}
-${chalk.green('     ██║███████║██████╔╝██║   ██║   ██║   ██║    ')}${chalk.yellow(
-        '█████╗  ██╔██╗ ██║██║   ██║██║██████╔╝██║   ██║██╔██╗ ██║██╔████╔██║█████╗  ██╔██╗ ██║   ██║       ██║     ██║     ██║'
-    )}
-${chalk.green('██   ██║██╔══██║██╔══██╗██║   ██║   ██║   ██║    ')}${chalk.yellow(
-        '██╔══╝  ██║╚██╗██║╚██╗ ██╔╝██║██╔══██╗██║   ██║██║╚██╗██║██║╚██╔╝██║██╔══╝  ██║╚██╗██║   ██║       ██║     ██║     ██║'
-    )}
-${chalk.green('╚█████╔╝██║  ██║██████╔╝╚██████╔╝   ██║   ██║    ')}${chalk.yellow(
-        '███████╗██║ ╚████║ ╚████╔╝ ██║██║  ██║╚██████╔╝██║ ╚████║██║ ╚═╝ ██║███████╗██║ ╚████║   ██║       ╚██████╗███████╗██║'
-    )}
-${chalk.green(' ╚════╝ ╚═╝  ╚═╝╚═════╝  ╚═════╝    ╚═╝   ╚═╝    ')}${chalk.yellow(
-        '╚══════╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝        ╚═════╝╚══════╝╚═╝'
-    )}
-       `);
-}
-
-function requirementsMessages(initialRequirements) {
-    const [nodeRequirements, vagrantRequirements, virtualBoxRequirements] = initialRequirements;
-
-    console.log(chalk.bold.green(`INFO!! Using ${pkg.description_name} in Wizard Mode`));
-
-    console.log(
-        `${
-            nodeRequirements[0]
-                ? chalk.bold.green(`INFO!! ${nodeRequirements[1]}`)
-                : chalk.bold.yellow(`WARNING!! ${nodeRequirements[1]}`)
-        }`
-    );
-    console.log(
-        `${
-            vagrantRequirements[0]
-                ? chalk.bold.green(`INFO!! ${vagrantRequirements[1]}`)
-                : vagrantRequirements[2] === false
-                ? chalk.bold.red(`PROBLEM!! ${vagrantRequirements[1]}`)
-                : chalk.bold.yellow(`WARNING!! ${vagrantRequirements[1]}`)
-        }`
-    );
-    console.log(
-        `${
-            virtualBoxRequirements[0]
-                ? chalk.bold.green(`INFO!! ${virtualBoxRequirements[1]}`)
-                : virtualBoxRequirements[2] === false
-                ? chalk.bold.red(`PROBLEM!! ${virtualBoxRequirements[1]}`)
-                : chalk.bold.yellow(`WARNING!! ${virtualBoxRequirements[1]}`)
-        }`
-    );
-}
+const { checkRequirements, checkRequirementsMessages } = require(`${pathJec}/src/utils/checkRequirements`);
+const { logo } = require(`${pathJec}/src/utils/logo`);
 
 module.exports = {
     async homeScreen() {
         console.log(chalk.bold.green(`Starting ${pkg.description_name}, please wait ....`));
 
-        const initialRequirements = await checkRequirements(pkg);
+        const initialRequirements = await checkRequirements();
 
         clear();
 
-        requirementsMessages(initialRequirements);
+        checkRequirementsMessages(initialRequirements);
 
         logo();
 

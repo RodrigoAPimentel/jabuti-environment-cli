@@ -1,10 +1,9 @@
 const shell = require('shelljs');
 
-const { vagrantCLI } = require(`${pathJec}/src/utils/vagrantCommand`);
-
-const { ansibleAWXConfigInformations } = require(`${pathJec}/src/utils/configInformations`);
+const { provider: providers } = require(`${pathJec}/src/providers/provider`);
 
 const { ask, askAWX, askMinishift } = require(`${pathJec}/src/questions/virtualMachineTool`);
+const providers_questions = require(`${pathJec}/src/questions/provider`);
 
 module.exports = {
     async createVirtualMachineTools(configurations) {
@@ -34,35 +33,22 @@ module.exports = {
                 const machine_number_of_cores = 2;
                 const machine_memory_size = 4096;
 
+                const { provider } = await providers_questions.ask();
                 const { public_ip, user, password } =
                     configurations.modeUse === 'cli' ? configurations : await askAWX();
 
                 vars[0] = user;
                 vars[1] = password;
 
-                console.log(`\n  >>>>>>>>>> Creating ${tool}. Please Wait .......`);
-
-                ansibleAWXConfigInformations(
+                providers({
+                    tool,
                     machine_name,
                     machine_number_of_cores,
                     machine_memory_size,
                     public_ip,
-                    vars
-                );
-
-                shell.cd(`${pathJec}/src/files/provisioning`);
-
-                shell.exec(
-                    vagrantCLI({ tool, machine_name, machine_number_of_cores, machine_memory_size, public_ip, vars })
-                );
-
-                ansibleAWXConfigInformations(
-                    machine_name,
-                    machine_number_of_cores,
-                    machine_memory_size,
-                    public_ip,
-                    vars
-                );
+                    vars,
+                    provider,
+                });
                 break;
 
             case 'Minishift-Windows':

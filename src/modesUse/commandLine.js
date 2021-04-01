@@ -1,8 +1,10 @@
 const program = require('commander');
+const shell = require('shelljs');
 
 const pkg = require(`${pathJec}/package.json`);
 
 const { core } = require(`${pathJec}/src/modesUse/modeUseCore`);
+const { checkRequirements, checkRequirementsMessages } = require(`${pathJec}/src/utils/checkRequirements`);
 
 module.exports = {
     cliCommands() {
@@ -18,7 +20,7 @@ module.exports = {
             });
 
         program
-            .command('vm <machine_name> <public_ip>')
+            .command('machine <machine_name> <public_ip>')
             .description(
                 'Creates a Virtual Machine. If informed only the machine_name and public_ip a machine with standard configuration will be created. (<public_ip> format: xxx.xxx.xxx.xxx)'
             )
@@ -36,7 +38,14 @@ module.exports = {
             .command('tool <public_ip> <user> <password>')
             .description('Creates a Virtual Machine with DevOps Tool. (<public_ip> format: xxx.xxx.xxx.xxx)')
             .addOption(
-                new program.Option('-d, --devops-tool <tool>', 'DevOps Tool').choices(['ansible-awx', 'minishift'])
+                new program.Option('-r, --provider <provider>', 'Provider for Creation Virtual Machine Tool')
+                    .choices(['vbox', 'wsl2'])
+                    .makeOptionMandatory()
+            )
+            .addOption(
+                new program.Option('-d, --devops-tool <tool>', 'DevOps Tool')
+                    .choices(['ansible-awx', 'minishift'])
+                    .makeOptionMandatory()
             )
             .action((public_ip, user, password, options) => {
                 opts = {
@@ -48,6 +57,41 @@ module.exports = {
                     ...options,
                 };
             });
+
+        program
+            .command('environment')
+            .description('Creates a Development Environment')
+            .addOption(
+                new program.Option('-r, --provider <provider>', 'Provider for Environment Creation')
+                    .choices(['vbox', 'wsl2'])
+                    .makeOptionMandatory()
+            )
+            .addOption(
+                new program.Option('-e, --environment <environment>', 'Development Environment')
+                    .choices(['react-native', 'react'])
+                    .makeOptionMandatory()
+            )
+            .action((options) => {
+                opts = { ...opts, creationMode: 'Create Standard Development Environment', ...options };
+            });
+
+        program
+            .command('requeriments')
+            .description('Basic Requirements Status')
+            .action(async () => {
+                checkRequirementsMessages(await checkRequirements());
+            });
+
+        program.command('tst').action(() => {
+            console.log('\n>>>>>>>>>> MODO TESTE <<<<<<<<<<\n');
+            shell.exec('wsl --exec cat /etc/issue');
+            const pathJecWsl = `/mnt/${pathJec.replaceAll('\\', '/').replaceAll(':', '').toLowerCase()}`;
+            console.log(pathJec);
+            console.log(pathJecWsl);
+            // shell.exec(`wsl --exec ls -la ${pathJecWsl}`);
+            // shell.exec(`wsl --exec cp ${pathJecWsl}/src/files/programs/Git.sh /mnt/wsl/`);
+            shell.exec(`wsl --exec ls -la /mnt/wsl`);
+        });
 
         program.parse(process.argv);
 

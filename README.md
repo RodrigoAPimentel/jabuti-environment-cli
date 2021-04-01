@@ -84,7 +84,7 @@ Ser cada vez mais ágil e preciso é um dos principais objetivos dos profissiona
 -   **jec wizard:** _Inicia o JEC no modo wizard de utilização (conforme abaixo);_
 -   **jec -V, jec --version:** _Versão do JEC;_
 -   **jec -h, jec --help:** _Help para os comandos;_
--   **jec vm [options] <machine_name> <public_ip>:** _Cria uma Máquina Virtual com configurações definidas com os **options** abaixo:_
+-   **jec machine [options] <machine_name> <public_ip>:** _Cria uma Máquina Virtual com configurações definidas com os **options** abaixo:_
     -   **machine_name:** _Informe o nome da Máquina Virtual que será exposto na Virtual Box e também será o hostname._
     -   **public_ip:** _Informe o IP fixo da Máquina Virtual._
     -   **options:** _Opções de Configuração da Máquina Virtual._
@@ -99,6 +99,9 @@ Ser cada vez mais ágil e preciso é um dos principais objetivos dos profissiona
     -   **user:** _Usuário da Ferramenta;_
     -   **password:** _Senha da Ferramenta;_
     -   **options:** _Opções de Ferramentas:_
+        -   **-r, --provider \<provider>:** _Provider para a criação da Máquina Virtual;_
+            -   **vbox:** _Utiliza o **VirtualBox** como Provider ;_
+            -   **wsl2:** _Utiliza o **Windows Subsystem for Linux 2** como Provider ;_
         -   **-d, --devops-tool \<tool>:** _Ferramenta:_
             -   **ansible-awx:** _Cria uma Máquina Virtual com o Ansible-AWX instalado e configurado, pronto para usar;_
             -   **minishift:** _Cria uma um Cluster Minishift no Sistema Operacional do Host._
@@ -217,3 +220,19 @@ Ao finalizar o processo de Provisionamento é mostrado as Configurações da Má
     > #### **_P.S: Se tiver instalado utilizando a versão "Clonando Repositório" deverá ser feito o "Pull" do repositório._**
     >
     > ![](/assets/updateAvailable.png)
+
+---
+
+---
+
+---
+
+---
+
+Changelog:
+
+-   adicionado script para configuração de ambiente para react-native
+-   Adicionado o WSL2 como provider
+-   Adicionado o modo "Create Standard Development Environment"
+-   adicionado opção para seleção de provider no cli para tools
+-   adicionado opcao para "Create Standard Development Environment" no cli

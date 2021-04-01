@@ -1,6 +1,6 @@
 const shell = require('shelljs');
 
-const { vagrantCLI } = require(`${pathJec}/src/utils/vagrantCommand`);
+const { provider: providers } = require(`${pathJec}/src/providers/provider`);
 
 const {
     standard_machine_memory_size,
@@ -10,8 +10,6 @@ const {
     standard_vars,
 } = require(`${pathJec}/src/creationModules/virtualMachineSettings/defaultVirtualMachineSettings`);
 
-const { machineConfigInformations } = require(`${pathJec}/src/utils/configInformations`);
-
 const {
     ask,
     askCreateVirtualMachine,
@@ -19,41 +17,7 @@ const {
     askOtherPort,
 } = require(`${pathJec}/src/questions/virtualMachineCreate`);
 
-function executeVirtualMachine(
-    machine_name,
-    public_ip,
-    machine_number_of_cores,
-    machine_memory_size,
-    programs,
-    ports,
-    vars
-) {
-    console.log('\n  >>>>>>>>>> Creating Virtual Machine. Please Wait .......');
-
-    shell.cd(`${pathJec}/src/files/provisioning`);
-
-    shell.exec(
-        vagrantCLI({
-            machine_name,
-            public_ip,
-            machine_number_of_cores,
-            machine_memory_size,
-            programs,
-            ports,
-            vars,
-        })
-    );
-
-    machineConfigInformations(
-        machine_name,
-        public_ip,
-        machine_number_of_cores,
-        machine_memory_size,
-        programs,
-        ports,
-        vars
-    );
-}
+const defaultProvider = 'vbox';
 
 module.exports = {
     async createVirtualMachine(configurations) {
@@ -77,6 +41,7 @@ module.exports = {
                     password: psw = standard_vars[1],
                     sshKey = standard_vars[2],
                     terminal: ter = false,
+                    provider = defaultProvider,
                 } = configurations;
 
                 ter === true && standard_programs.push('ZSH');
@@ -87,21 +52,31 @@ module.exports = {
                     ? (varss[2] = ['Yes', `'${shell.cat('~/.ssh/id_rsa.pub').stdout.trim()}'`])
                     : (varss[2] = ['No', '']);
 
-                executeVirtualMachine(name, ipp, numberCores, memorySize, standard_programs, standard_ports, varss);
+                providers({
+                    machine_name: name,
+                    public_ip: ipp,
+                    machine_number_of_cores: numberCores,
+                    machine_memory_size: memorySize,
+                    programs: standard_programs,
+                    ports: standard_ports,
+                    vars: varss,
+                    provider,
+                });
                 break;
 
             case 'Standard Virtual Machine':
                 const { machine_name_standard, public_ip_standard } = await askCreateVirtualMachineStandard();
 
-                executeVirtualMachine(
-                    machine_name_standard,
-                    public_ip_standard,
-                    standard_machine_number_of_cores,
-                    standard_machine_memory_size,
-                    standard_programs,
-                    standard_ports,
-                    standard_vars
-                );
+                providers({
+                    machine_name: machine_name_standard,
+                    public_ip: public_ip_standard,
+                    machine_number_of_cores: standard_machine_number_of_cores,
+                    machine_memory_size: standard_machine_memory_size,
+                    programs: standard_programs,
+                    ports: standard_ports,
+                    vars: standard_vars,
+                    provider: defaultProvider,
+                });
                 break;
 
             case 'Customize the Virtual Machine':
@@ -147,15 +122,16 @@ module.exports = {
                     ? (vars[2] = ['Yes', `'${shell.cat('~/.ssh/id_rsa.pub').stdout.trim()}'`])
                     : (vars[2] = ['No', '']);
 
-                executeVirtualMachine(
+                providers({
                     machine_name,
                     public_ip,
                     machine_number_of_cores,
                     machine_memory_size,
                     programs,
                     ports,
-                    vars
-                );
+                    vars,
+                    provider: defaultProvider,
+                });
                 break;
 
             default:

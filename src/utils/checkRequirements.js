@@ -1,17 +1,20 @@
 const shell = require('shelljs');
 const semver = require('semver');
+const chalk = require('chalk');
+
+const pkg = require(`${pathJec}/package.json`);
 
 const nodeVersionRequired = '14.11.0';
 const vagrantVersionRequired = '2.2.7';
 const virtualBoxVersionRequired = '6.0.10';
 
-function checkForNewVersion(infoCLI) {
+function checkForNewVersion() {
     return new Promise((resolve) => {
         shell.exec(
-            `npm show ${infoCLI.name} version --fetch-retries 1 --fetch-retry-mintimeout 500 --fetch-retry-maxtimeout 500`,
+            `npm show ${pkg.name} version --fetch-retries 1 --fetch-retry-mintimeout 500 --fetch-retry-maxtimeout 500`,
             { silent: true, async: true },
             (code, stdout, stderr) => {
-                if (!stderr && semver.lt(infoCLI.version, stdout)) resolve([true, stdout]);
+                if (!stderr && semver.lt(pkg.version, stdout)) resolve([true, stdout]);
                 resolve([false, '', '']);
             }
         );
@@ -65,16 +68,48 @@ function checkVirtualBox() {
 }
 
 module.exports = {
-    async checkRequirements(infoCLI) {
+    async checkRequirements() {
         const node = checkNode();
         const vagrant = checkVagrant();
         const virtualBox = checkVirtualBox();
-        const appForNewVersion = await checkForNewVersion(infoCLI);
+        const appForNewVersion = await checkForNewVersion();
 
         let dependencyOk = true;
 
         if (vagrant[2] === false || virtualBox[2] === false) dependencyOk = false;
 
         return [node, vagrant, virtualBox, appForNewVersion, dependencyOk];
+    },
+
+    checkRequirementsMessages(requeriments) {
+        const [nodeRequirements, vagrantRequirements, virtualBoxRequirements] = requeriments;
+
+        console.log(chalk.bold.green(`INFO!! Using ${pkg.description_name} in Wizard Mode`));
+
+        console.log(
+            `${
+                nodeRequirements[0]
+                    ? chalk.bold.green(`INFO!! ${nodeRequirements[1]}`)
+                    : chalk.bold.yellow(`WARNING!! ${nodeRequirements[1]}`)
+            }`
+        );
+        console.log(
+            `${
+                vagrantRequirements[0]
+                    ? chalk.bold.green(`INFO!! ${vagrantRequirements[1]}`)
+                    : vagrantRequirements[2] === false
+                    ? chalk.bold.red(`PROBLEM!! ${vagrantRequirements[1]}`)
+                    : chalk.bold.yellow(`WARNING!! ${vagrantRequirements[1]}`)
+            }`
+        );
+        console.log(
+            `${
+                virtualBoxRequirements[0]
+                    ? chalk.bold.green(`INFO!! ${virtualBoxRequirements[1]}`)
+                    : virtualBoxRequirements[2] === false
+                    ? chalk.bold.red(`PROBLEM!! ${virtualBoxRequirements[1]}`)
+                    : chalk.bold.yellow(`WARNING!! ${virtualBoxRequirements[1]}`)
+            }`
+        );
     },
 };
