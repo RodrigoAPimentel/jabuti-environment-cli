@@ -9,3 +9,5 @@ echo " "
 echo "========================== INSTALLING --> NODE.JS"
 nvm install --lts
 nvm install 10.16.0
+
+source ~/.nvm/nvm.sh
